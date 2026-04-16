@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Evaluación · Hardware y Sistema Operativo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #eef2f7;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      padding: 1.2rem;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .evaluation-container {
+      max-width: 950px;
+      width: 100%;
+      margin: 0 auto;
+      background: white;
+      border-radius: 2rem;
+      box-shadow: 0 20px 40px -12px rgba(0,20,40,0.2);
+      padding: 1.8rem 1.8rem 2rem;
+      border: 1px solid #cbd6e6;
+    }
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 600;
+      color: #1e3a5f;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 3px solid #9bb7d4;
+      padding-bottom: 0.7rem;
+      margin-bottom: 1.2rem;
+    }
+    h1 small {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #4a627a;
+      margin-left: auto;
+    }
+    .info-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      background: #e1e9f2;
+      padding: 0.7rem 1.2rem;
+      border-radius: 60px;
+    }
+    .score-box {
+      background: #1e3a5f;
+      color: white;
+      padding: 0.4rem 1.2rem;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+    .badge {
+      background: white;
+      color: #1e3a5f;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      font-weight: 600;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .questions-area {
+      margin: 1.5rem 0 1rem;
+    }
+    .question-card {
+      background: #fafcff;
+      border-radius: 1.2rem;
+      padding: 1.2rem 1.4rem;
+      margin-bottom: 1.3rem;
+      border: 1px solid #d0dfee;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.02);
+    }
+    .question-header {
+      display: flex;
+      gap: 0.7rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      color: #1e3a5f;
+      font-size: 1rem;
+      align-items: baseline;
+    }
+    .q-num {
+      background: #1e3a5f;
+      color: white;
+      border-radius: 30px;
+      padding: 0.15rem 0.7rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin: 0.5rem 0 0.8rem;
+    }
+    .option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      background: #ffffff;
+      border: 1.5px solid #d7e2ee;
+      border-radius: 1rem;
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .option:hover {
+      background: #eef4fc;
+      border-color: #7a9bcb;
+    }
+    .option input[type="radio"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 1.2rem;
+      height: 1.2rem;
+      border: 2px solid #6f8db0;
+      border-radius: 50%;
+      margin-top: 0.1rem;
+      cursor: pointer;
+      background: white;
+      flex-shrink: 0;
+    }
+    .option input[type="radio"]:checked {
+      background-color: #1e6f5c;
+      border-color: #1e6f5c;
+      box-shadow: inset 0 0 0 3px white;
+    }
+    .option label {
+      flex: 1;
+      cursor: pointer;
+      font-size: 0.95rem;
+      color: #1f2e3f;
+      line-height: 1.4;
+    }
+    .feedback {
+      margin-top: 0.8rem;
+      padding: 0.7rem 1rem;
+      border-radius: 0.8rem;
+      font-size: 0.85rem;
+      background: #f7f9fc;
+      border-left: 5px solid;
+      color: #2a405c;
+    }
+    .feedback.correct {
+      border-left-color: #2b8c5e;
+      background: #e9f6ef;
+    }
+    .feedback.incorrect {
+      border-left-color: #c13b3b;
+      background: #ffeeee;
+    }
+    .action-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin: 1.8rem 0 0.5rem;
+    }
+    .btn {
+      border: none;
+      background: #dbe4ed;
+      color: #1e3a5f;
+      font-weight: 600;
+      padding: 0.75rem 1.8rem;
+      border-radius: 60px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.03);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1px solid #b8cade;
+    }
+    .btn-primary {
+      background: #1e3a5f;
+      color: white;
+      border: none;
+    }
+    .btn-primary:hover {
+      background: #102b44;
+      transform: scale(1.02);
+    }
+    .btn-secondary {
+      background: #eef3f9;
+    }
+    .btn-secondary:hover {
+      background: #dae2ee;
+    }
+    .btn-success {
+      background: #2b8c5e;
+      color: white;
+      border: none;
+    }
+    .btn-success:hover {
+      background: #1f7049;
+    }
+    .footer-note {
+      margin-top: 1.5rem;
+      font-size: 0.8rem;
+      text-align: center;
+      color: #6e8898;
+    }
+    @media (max-width: 600px) {
+      body { padding: 0.8rem; }
+      .evaluation-container { padding: 1.2rem; }
+      h1 { font-size: 1.5rem; flex-wrap: wrap; }
+      .btn { padding: 0.6rem 1.2rem; font-size: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="evaluation-container">
+  <h1>
+    🖥️ Evaluación · Hardware y SO
+    <small>10 preguntas aleatorias</small>
+  </h1>
+  <div class="info-bar">
+    <span class="badge">🎲 30 preguntas en el banco</span>
+    <span class="score-box" id="scoreDisplay">0 / 10</span>
+  </div>
+
+  <div id="questionsArea" class="questions-area">
+    <!-- Aquí se renderizan las 10 preguntas -->
+  </div>
+
+  <div class="action-buttons">
+    <button id="checkBtn" class="btn btn-success">✅ Corregir evaluación</button>
+    <button id="newTestBtn" class="btn btn-primary">🔄 Nueva evaluación (siguiente alumna)</button>
+  </div>
+  <div class="footer-note">
+    ✔️ Cada pregunta correcta suma 1 punto. Máximo 10. Cada nueva prueba mezcla el banco.
+  </div>
+</div>
+
+<script>
+  (function(){
+    "use strict";
+
+    // ---------- BANCO DE PREGUNTAS UNIFICADO (30 preguntas) ----------
+    // Primer bloque: 10 preguntas de Hardware (archivo cuestionario_hardware_completo.html)
+    // Segundo bloque: 20 preguntas de Sistema Operativo (archivo deepseek_html_20260416_9e8428.html)
+    
+    const bank = [];
+
+    // ===== BLOQUE 1: HARDWARE (10 preguntas) =====
+    // Se ha inferido la respuesta correcta a partir de las notas técnicas.
+    const hardwareQuestions = [
+      {
+        text: "¿Cuál es la utilidad principal de la placa base (motherboard) según el audio?",
+        options: ["Mantener conectadas todas las partes del ordenador.", "Almacenar permanentemente los archivos del sistema operativo.", "Aumentar la velocidad de internet del usuario.", "Transformar el voltaje de la corriente alterna."],
+        correct: "A",
+        explanation: "Es la estructura donde se conectan discos, tarjetas, procesador y ventiladores para que funcionen juntos."
+      },
+      {
+        text: "En un procesador, ¿qué efecto tienen los núcleos sobre su rendimiento?",
+        options: ["Actúan como un factor multiplicador de la velocidad (Hertz).", "Permiten que el ordenador use menos electricidad.", "Evitan que el procesador se caliente.", "Sirven para guardar más fotos en el ordenador."],
+        correct: "A",
+        explanation: "A mayor número de núcleos con los mismos GHz, mayor será la velocidad total de procesamiento."
+      },
+      {
+        text: "¿Por qué se dice que el almacenamiento de la memoria RAM es temporal?",
+        options: ["Porque solo sirve para guardar documentos de texto cortos.", "Porque solo dura un par de meses antes de dañarse.", "Porque la información se traslada automáticamente a la nube.", "Porque los datos se borran cuando el ordenador se apaga."],
+        correct: "D",
+        explanation: "Solo guarda los datos de los programas usados en el momento; al cortar la energía, la información se pierde."
+      },
+      {
+        text: "¿Cuál es la diferencia fundamental entre la memoria RAM y el disco duro?",
+        options: ["El disco duro mantiene la información intacta aunque el PC se apague.", "Solo se pueden instalar juegos en la memoria RAM.", "La memoria RAM tiene mucha más capacidad que el disco duro.", "El disco duro es mucho más rápido que la memoria RAM."],
+        correct: "A",
+        explanation: "El disco duro es un almacenamiento permanente donde los datos persisten sin electricidad."
+      },
+      {
+        text: "¿Qué función cumple la tarjeta gráfica (o de video)?",
+        options: ["Procesar información y convertirla en imágenes para el monitor.", "Aumentar el volumen de los altavoces.", "Almacenar las contraseñas del usuario.", "Filtrar el aire que entra al gabinete."],
+        correct: "A",
+        explanation: "Su tarea es interpretar los datos del sistema para proyectar lo que vemos en pantalla."
+      },
+      {
+        text: "¿Qué es una tarjeta gráfica 'integrada'?",
+        options: ["Una que solo sirve para ver fotos en blanco y negro.", "Una tarjeta que no necesita cables para funcionar.", "Una que se conecta por fuera del ordenador mediante USB.", "Una que ya viene incluida dentro del procesador."],
+        correct: "D",
+        explanation: "Forman parte del mismo chip del procesador, aunque suelen ser de menor calidad que las dedicadas."
+      },
+      {
+        text: "¿Cuál es la tarea vital de la fuente de alimentación?",
+        options: ["Controlar la velocidad del ratón y el teclado.", "Limpiar los archivos basura del sistema operativo.", "Transformar el alto voltaje del enchufe en un voltaje menor para el PC.", "Guardar una copia de seguridad de la BIOS."],
+        correct: "C",
+        explanation: "Adapta la energía de la red eléctrica para que los componentes no se rompan con voltajes excesivos."
+      },
+      {
+        text: "¿Qué funciones cumple la caja o gabinete, además de proteger los componentes?",
+        options: ["Duplicar la memoria RAM de forma automática.", "Servir como monitor secundario si se le conecta un cable.", "Proporcionar puertos USB frontales y permitir la ventilación.", "Recargar la batería de los teléfonos móviles por contacto."],
+        correct: "C",
+        explanation: "Facilita la conectividad externa y es crucial para el flujo de aire que enfría el sistema."
+      },
+      {
+        text: "¿Cuáles son las tres fases del proceso de ventilación descrito?",
+        options: ["Carga de batería, uso de energía y ahorro de energía.", "Lectura, escritura y borrado de discos.", "Entrada de aire frío, generación de calor por componentes y expulsión de aire caliente.", "Encendido, carga de Windows y apagado."],
+        correct: "C",
+        explanation: "El flujo continuo evita que el PC se queme o se apague por exceso de calor."
+      },
+      {
+        text: "¿Cómo lee la información una unidad óptica (lector de CD/DVD)?",
+        options: ["Escaneando el código de barras del disco.", "Usando imanes de alta potencia.", "Mediante un láser que lee y graba los archivos en el disco.", "A través de una conexión Wi-Fi interna."],
+        correct: "C",
+        explanation: "El láser es la herramienta tecnológica para interactuar con los datos del disco físico."
+      }
+    ];
+
+    hardwareQuestions.forEach((q, idx) => {
+      bank.push({
+        id: `hw-${idx}`,
+        text: q.text,
+        options: q.options,
+        correct: q.correct,
+        explanation: q.explanation
+      });
+    });
+
+    // ===== BLOQUE 2: SISTEMA OPERATIVO (20 preguntas) =====
+    const soQuestions = [
+      { text: "Según la analogía de la orquesta, ¿qué papel desempeña el Sistema Operativo?",
+        options: ["El instrumento principal.", "El director de la orquesta.", "El público que escucha."],
+        correct: "B", explanation: "El SO coordina todos los componentes como un director." },
+      { text: "¿Qué sucedería en una computadora si no existiera el Sistema Operativo?",
+        options: ["La computadora funcionaría más rápido.", "Solo se podrían usar programas de texto.", "Cada componente intentaría hacer algo diferente y nada funcionaría."],
+        correct: "C", explanation: "Sin SO, no hay coordinación." },
+      { text: "¿Cuál es la función del 'Gestor de Memoria' del Sistema Operativo?",
+        options: ["Guardar fotos y videos permanentemente.", "Decidir cuánta memoria RAM se asigna a cada programa.", "Aumentar la velocidad de internet."],
+        correct: "B", explanation: "Gestiona la asignación de RAM." },
+      { text: "¿Qué son los 'controladores' (drivers) en el contexto del SO?",
+        options: ["Programas para aprender a escribir rápido.", "Programas que permiten al SO comunicarse con dispositivos como impresoras o cámaras.", "Dispositivos físicos que se conectan por USB."],
+        correct: "B", explanation: "Los drivers son software traductor." },
+      { text: "El sistema de archivos organiza el contenido en una estructura similar a:",
+        options: ["Un círculo cerrado.", "Las raíces de un árbol.", "Una línea recta sin divisiones."],
+        correct: "B", explanation: "Estructura jerárquica en árbol." },
+      { text: "¿Qué función tienen los 'Permisos' dentro del organizador de archivos?",
+        options: ["Indicar el tamaño total de un video.", "Controlar quién puede ver, editar o eliminar un archivo.", "Dar permiso a la computadora para encenderse."],
+        correct: "B", explanation: "Permisos controlan acceso." },
+      { text: "¿Qué es el 'Kernel' dentro de un Sistema Operativo?",
+        options: ["Una aplicación para editar fotos.", "El corazón del sistema que controla directamente el hardware.", "El nombre de un virus informático."],
+        correct: "B", explanation: "Kernel es núcleo que gestiona hardware." },
+      { text: "¿Cuál es la diferencia entre el 'Modo Kernel' y el 'Modo Usuario'?",
+        options: ["El modo kernel es para juegos y el usuario para tareas.", "El modo kernel tiene acceso total al hardware, mientras que el usuario debe pedir permiso.", "No hay diferencia, son dos nombres para lo mismo."],
+        correct: "B", explanation: "Kernel tiene privilegios totales; modo usuario restringido." },
+      { text: "¿Por qué es importante la separación entre aplicaciones y el Kernel?",
+        options: ["Para que la computadora se vea más bonita.", "Para evitar que un programa malicioso o que falle dañe directamente el hardware.", "Para que el usuario tenga que escribir más comandos."],
+        correct: "B", explanation: "Aislamiento protege hardware y sistema." },
+      { text: "¿Qué es una Interfaz Gráfica de Usuario (GUI)?",
+        options: ["Una forma de hablarle a la computadora.", "El uso de iconos, ventanas y botones para interactuar visualmente.", "Una terminal donde solo se escribe texto."],
+        correct: "B", explanation: "GUI usa elementos visuales." },
+      { text: "¿Cuál es la principal ventaja de la Interfaz de Texto (CLI)?",
+        options: ["Es la más fácil de usar para niños.", "Es poderosa y precisa, ideal para expertos y programadores.", "Permite usar el ratón de forma más eficiente."],
+        correct: "B", explanation: "CLI es potente y precisa para expertos." },
+      { text: "¿A qué se refieren las siglas del modelo WIMP?",
+        options: ["Windows, Icons, Menus, Pointer.", "Web, Internet, Music, Player.", "Work, Intelligent, Memory, Power."],
+        correct: "A", explanation: "Windows, Iconos, Menús, Puntero." },
+      { text: "¿Cuál es una característica distintiva del sistema operativo Android?",
+        options: ["Es un sistema cerrado que solo Apple controla.", "Es un sistema abierto que se adapta a diferentes fabricantes.", "No permite el uso de aplicaciones de terceros."],
+        correct: "B", explanation: "Android es abierto y multiproveedor." },
+      { text: "¿En qué se enfoca principalmente el sistema operativo iOS de Apple?",
+        options: ["En permitir que cualquiera modifique su código.", "En la integración perfecta entre dispositivos como iPhone, iPad y Mac.", "En ser usado únicamente en refrigeradores inteligentes."],
+        correct: "B", explanation: "iOS prioriza integración de ecosistema y privacidad." },
+      { text: "¿Cómo gestionan los SO móviles las aplicaciones para ahorrar batería?",
+        options: ["Apagando la pantalla cada 5 segundos.", "Priorizando la app activa y reduciendo el consumo de las que están en segundo plano.", "Eliminando todas las fotos del dispositivo."],
+        correct: "B", explanation: "Optimizan recursos en segundo plano." },
+      { text: "¿Qué puede hacer un 'Refrigerador Inteligente' gracias a su SO ligero?",
+        options: ["Cocinar la comida automáticamente.", "Mostrar recetas, hacer listas de compras y ver el interior con cámaras.", "Volar para entregar pedidos a domicilio."],
+        correct: "B", explanation: "Funciones de gestión de alimentos." },
+      { text: "¿Qué tipo de sistemas operativos suelen usar los dispositivos del 'Internet de las Cosas' (IoT)?",
+        options: ["Versiones completas de Windows 11.", "Versiones reducidas de Linux o sistemas ligeros como FreeRTOS.", "No necesitan sistema operativo, funcionan con electricidad solamente."],
+        correct: "B", explanation: "SO ligeros y eficientes." },
+      { text: "Según la conclusión, el SO es el puente entre:",
+        options: ["La computadora y el enchufe de pared.", "Tú (el humano) y la máquina (el hardware).", "Dos computadoras diferentes solamente."],
+        correct: "B", explanation: "Traduce intenciones humanas a comandos hardware." },
+      { text: "¿Por qué se dice que el Sistema Operativo es un 'Director Invisible'?",
+        options: ["Porque no ocupa espacio en el disco duro.", "Porque trabaja constantemente detrás de escena sin que lo notemos.", "Porque solo funciona cuando la pantalla está apagada."],
+        correct: "B", explanation: "Ejecuta tareas en segundo plano." },
+      { text: "¿Cuál de estos es un componente de la Interfaz Gráfica de un escritorio digital?",
+        options: ["El procesador físico.", "El Menú de Inicio.", "La corriente alterna."],
+        correct: "B", explanation: "Menú Inicio es parte de la GUI." }
+    ];
+
+    soQuestions.forEach((q, idx) => {
+      bank.push({
+        id: `so-${idx}`,
+        text: q.text,
+        options: q.options,
+        correct: q.correct,
+        explanation: q.explanation
+      });
+    });
+
+    // ---------- CONFIGURACIÓN DE LA EVALUACIÓN ----------
+    const TOTAL_QUESTIONS = 10;               // preguntas por evaluación
+    let currentQuestions = [];                // array de objetos pregunta seleccionados
+    let userAnswers = new Array(TOTAL_QUESTIONS).fill(null); // 'A','B','C','D' o null
+
+    const questionsArea = document.getElementById('questionsArea');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const checkBtn = document.getElementById('checkBtn');
+    const newTestBtn = document.getElementById('newTestBtn');
+
+    // Función para seleccionar N preguntas aleatorias sin repetición
+    function shufflePickN(n) {
+      const indices = Array.from({ length: bank.length }, (_, i) => i);
+      for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+      }
+      return indices.slice(0, n).map(idx => bank[idx]);
+    }
+
+    function resetAnswers() {
+      userAnswers = new Array(TOTAL_QUESTIONS).fill(null);
+    }
+
+    function generateNewTest() {
+      currentQuestions = shufflePickN(TOTAL_QUESTIONS);
+      resetAnswers();
+      renderQuestions();
+      updateScoreDisplay(0);
+    }
+
+    function updateScoreDisplay(scoreValue = null) {
+      if (scoreValue === null) {
+        let correct = 0;
+        for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+          if (userAnswers[i] && userAnswers[i] === currentQuestions[i].correct) correct++;
+        }
+        scoreDisplay.textContent = `${correct} / 10`;
+      } else {
+        scoreDisplay.textContent = `${scoreValue} / 10`;
+      }
+    }
+
+    function renderQuestions() {
+      if (!currentQuestions.length) return;
+      let html = '';
+      for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+        const q = currentQuestions[i];
+        const selected = userAnswers[i];
+        const letters = q.options.length === 4 ? ['A','B','C','D'] : ['A','B','C'];
+        
+        let optionsHtml = '';
+        q.options.forEach((optText, optIdx) => {
+          const letter = letters[optIdx];
+          const checked = (selected === letter) ? 'checked' : '';
+          optionsHtml += `
+            <div class="option" data-qidx="${i}" data-letter="${letter}">
+              <input type="radio" name="q${i}" value="${letter}" id="q${i}_${letter}" ${checked}>
+              <label for="q${i}_${letter}"><strong>${letter})</strong> ${optText}</label>
+            </div>
+          `;
+        });
+
+        html += `
+          <div class="question-card" id="card-${i}">
+            <div class="question-header">
+              <span class="q-num">Pregunta ${i+1}</span>
+              <span>${q.text}</span>
+            </div>
+            <div class="options">
+              ${optionsHtml}
+            </div>
+            <div class="feedback" id="fb-${i}"></div>
+          </div>
+        `;
+      }
+      questionsArea.innerHTML = html;
+
+      // Asignar eventos a los radios y opciones
+      for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+        const radios = document.querySelectorAll(`input[name="q${i}"]`);
+        radios.forEach(radio => {
+          radio.addEventListener('change', (e) => {
+            const val = e.target.value;
+            userAnswers[i] = val;
+            const fbDiv = document.getElementById(`fb-${i}`);
+            if (fbDiv) {
+              fbDiv.innerHTML = '';
+              fbDiv.className = 'feedback';
+            }
+            updateScoreDisplay();
+          });
+        });
+        const optionDivs = document.querySelectorAll(`.option[data-qidx="${i}"]`);
+        optionDivs.forEach(div => {
+          div.addEventListener('click', (e) => {
+            const radio = div.querySelector('input[type="radio"]');
+            if (radio && !radio.checked) {
+              radio.checked = true;
+              const letter = div.getAttribute('data-letter');
+              userAnswers[i] = letter;
+              const fbDiv = document.getElementById(`fb-${i}`);
+              if (fbDiv) { fbDiv.innerHTML = ''; fbDiv.className = 'feedback'; }
+              updateScoreDisplay();
+            }
+          });
+        });
+      }
+      updateScoreDisplay();
+    }
+
+    function correctEvaluation() {
+      let correctCount = 0;
+      for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+        const q = currentQuestions[i];
+        const userAns = userAnswers[i];
+        const fbDiv = document.getElementById(`fb-${i}`);
+        if (!fbDiv) continue;
+        
+        const isCorrect = (userAns && userAns === q.correct);
+        if (isCorrect) correctCount++;
+        
+        const correctLetter = q.correct;
+        const letters = q.options.length === 4 ? ['A','B','C','D'] : ['A','B','C'];
+        const correctIdx = letters.indexOf(correctLetter);
+        const correctText = q.options[correctIdx];
+        
+        let fbHtml = '';
+        if (!userAns) {
+          fbHtml = `<span style="color:#b85e00;">⚠️ Sin responder. La respuesta correcta es ${correctLetter}) ${correctText}.<br>${q.explanation}</span>`;
+          fbDiv.className = 'feedback incorrect';
+        } else if (isCorrect) {
+          fbHtml = `✅ <strong>¡Correcto!</strong> ${q.explanation}`;
+          fbDiv.className = 'feedback correct';
+        } else {
+          fbHtml = `❌ <strong>Incorrecto.</strong> La respuesta correcta es ${correctLetter}) ${correctText}.<br>${q.explanation}`;
+          fbDiv.className = 'feedback incorrect';
+        }
+        fbDiv.innerHTML = fbHtml;
+      }
+      updateScoreDisplay(correctCount);
+      alert(`📊 Evaluación corregida.\nAciertos: ${correctCount} de 10 (${correctCount*10}%)\nRevisá los detalles en pantalla.`);
+    }
+
+    // Inicializar
+    function init() {
+      generateNewTest();
+    }
+
+    checkBtn.addEventListener('click', () => {
+      if (!currentQuestions.length) return;
+      correctEvaluation();
+    });
+
+    newTestBtn.addEventListener('click', () => {
+      generateNewTest();
+    });
+
+    init();
+  })();
+</script>
+</body>
+</html>
